@@ -3,7 +3,7 @@ import torch
 import numpy as np
 from omegaconf import OmegaConf
 import streamlit as st
-from streamlit import caching
+# from streamlit import caching
 from PIL import Image
 from main import instantiate_from_config, DataModuleFromConfig
 from torch.utils.data import DataLoader
@@ -302,7 +302,8 @@ if __name__ == "__main__":
     parser = get_parser()
 
     opt, unknown = parser.parse_known_args()
-
+    print("opt:", opt)
+    
     ckpt = None
     if opt.resume:
         if not os.path.exists(opt.resume):
@@ -345,7 +346,7 @@ if __name__ == "__main__":
     #eval_mode = st.sidebar.checkbox("Eval Mode", value=True)
     eval_mode = True
     #show_config = st.sidebar.checkbox("Show Config", value=False)
-    show_config = False
+    show_config = True
     if show_config:
         st.info("Checkpoint: {}".format(ckpt))
         st.json(OmegaConf.to_container(config))
