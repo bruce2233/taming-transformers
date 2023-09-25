@@ -1,0 +1,5 @@
+lightning:
+  trainer:
+    distributed_backend: ddp
+    accumulate_grad_batches: 4
+    gpus: 0,1
