@@ -411,6 +411,16 @@ class DRINExamples(Dataset):
         e["image"] = transformed["image"]
         e["depth"] = transformed["depth"]
         return e
+    
+class DRINRGBConditionExamples(DRINExamples):
+    def __getitem__(self, i):
+        e = dict()
+        e["image"] = self.preprocess_image(self.image_paths[i])
+        e["depth"] = self.preprocess_depth(self.depth_paths[i])
+        transformed = self.preprocessor(image=e["image"], depth=e["depth"])
+        e["image"] = transformed["image"]
+        e["depth"] = transformed["image"]
+        return e
 
 
 def imscale(x, factor, keepshapes=False, keepmode="bicubic"):
