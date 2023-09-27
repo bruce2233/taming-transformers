@@ -108,12 +108,12 @@ def run_conditional(model, dsets):
         start = 0
 
     idx[:,start:] = 0
-    idx = idx.reshape(cshape[0],cshape[2],cshape[3])
-    start_i = start//cshape[3]
-    start_j = start %cshape[3]
+    idx = idx.reshape(cshape[0],cshape[2],cshape[3]) #(batch_size, h, w)
+    start_i = start//cshape[3] #(row)
+    start_j = start %cshape[3] #(colunm)
 
     if not half_sample and quant_z.shape == quant_c.shape:
-        st.info("Setting idx to c_indices")
+        st.info("Setting idx to c_indices") 
         idx = c_indices.clone().reshape(cshape[0],cshape[2],cshape[3])
 
     cidx = c_indices
@@ -137,7 +137,7 @@ def run_conditional(model, dsets):
     elapsed_t = st.empty()
     info = st.empty()
     st.text("Sampled")
-    if st.button("Sample"):
+    if st.button("Sample") or True: #tmp for debug
         output = st.empty()
         start_t = time.time()
         for i in range(start_i,cshape[2]-0):
@@ -262,8 +262,8 @@ def load_model_from_config(config, sd, gpu=True, eval_mode=True):
         missing, unexpected = model.load_state_dict(sd, strict=False)
         st.info(f"Missing Keys in State Dict: {missing}")
         st.info(f"Unexpected Keys in State Dict: {unexpected}")
-    if gpu:
-        model.cuda()
+    if (gpu and torch.cuda.is_available()):
+        model.to("cuda:0")
     if eval_mode:
         model.eval()
     return {"model": model}
@@ -284,6 +284,7 @@ def load_model_and_dset(config, ckpt, gpu, eval_mode):
 
     # now load the specified checkpoint
     if ckpt:
+        print(ckpt)
         pl_sd = torch.load(ckpt, map_location="cpu")
         global_step = pl_sd["global_step"]
     else:
