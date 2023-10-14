@@ -411,15 +411,28 @@ class DRINExamples(Dataset):
         e["image"] = transformed["image"]
         e["depth"] = transformed["depth"]
         return e
-    
+
+import sys
 class DRINRGBConditionExamples(DRINExamples):
+    def __init__(self, size=256):
+        self.preprocessor = get_preprocessor(size=256, additional_targets={"depth": "image"})
+        with open("data/scribble_examples.txt", "r") as f:
+            relpaths = f.read().splitlines()
+        image_relpaths = ["/".join(relpath.split("/")[1:]) for relpath in relpaths]
+        self.image_paths = [os.path.join("../datasets/Sketchy",
+                                         relpath) for relpath in image_relpaths]
+        self.depth_paths = [os.path.join("../datasets/Sketchy/",
+                                         relpath.replace(".JPEG", ".png")) for relpath in relpaths]
+        print(sys._getframe().f_lineno, self.image_paths[0:5])
+        print(sys._getframe().f_lineno, self.depth_paths[0:5])
+    
     def __getitem__(self, i):
         e = dict()
         e["image"] = self.preprocess_image(self.image_paths[i])
-        e["depth"] = self.preprocess_depth(self.depth_paths[i])
+        e["depth"] = self.preprocess_image(self.depth_paths[i])
         transformed = self.preprocessor(image=e["image"], depth=e["depth"])
         e["image"] = transformed["image"]
-        e["depth"] = transformed["image"]
+        e["depth"] = transformed["depth"]
         return e
 
 
