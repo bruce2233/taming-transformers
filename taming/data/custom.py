@@ -35,4 +35,8 @@ class CustomTest(CustomBase):
             paths = f.read().splitlines()
         self.data = ImagePaths(paths=paths, size=size, random_crop=False)
 
-
+class PatchCondTrain(CustomBase):
+    def __init__(self, size, training_images_list_file):
+        pass
+    
+    

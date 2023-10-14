@@ -267,13 +267,13 @@ class VectorQuantizer2(nn.Module):
             inds[inds>=self.used.shape[0]] = 0 # simply set to zero
         back=torch.gather(used[None,:][inds.shape[0]*[0],:], 1, inds)
         return back.reshape(ishape)
-
+    # import sys
     def forward(self, z, temp=None, rescale_logits=False, return_logits=False):
         assert temp is None or temp==1.0, "Only for interface compatible with Gumbel"
         assert rescale_logits==False, "Only for interface compatible with Gumbel"
         assert return_logits==False, "Only for interface compatible with Gumbel"
         # reshape z -> (batch, height, width, channel) and flatten
-        print(z)
+        # print(sys._getframe().f_lineno, z)
         z = rearrange(z, 'b c h w -> b h w c').contiguous()
         z_flattened = z.view(-1, self.e_dim)
         # distances from z to embeddings e_j (z - e)^2 = z^2 + e^2 - 2 e * z
