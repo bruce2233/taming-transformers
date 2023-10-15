@@ -39,6 +39,7 @@ model:
     cond_stage_config:
       target: taming.models.vqgan.VQModel
       params:
+        sane_index_shape: True
         ckpt_path: logs/2020-09-23T17-56-33_imagenet_vqgan/checkpoints/last.ckpt
         embed_dim: 256
         n_embed: 1024
@@ -68,10 +69,10 @@ data:
     batch_size: 2
     num_workers: 8
     train:
-      target: taming.data.imagenet.RINTrainWithDepth
+      target: taming.data.imagenet.DRINRGBConditionExamples
       params:
         size: 256
     validation:
-      target: taming.data.imagenet.RINValidationWithDepth
+      target: taming.data.imagenet.DRINRGBConditionExamples
       params:
         size: 256
